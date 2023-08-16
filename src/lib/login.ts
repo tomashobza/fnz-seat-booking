@@ -1,4 +1,5 @@
-import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { getAuth, signOut, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import toast from 'svelte-french-toast';
 import { auth, provider } from './firebase';
 import { user } from './stores';
 
@@ -13,10 +14,12 @@ export const login = () => {
 				// const user = result.user;
 				// IdP data available using getAdditionalUserInfo(result)
 				// ...
+				toast.success("You're logged in!");
 				user.set(result.user);
 				res(result);
 			})
 			.catch((error) => {
+				toast.error('Something went wrong. 😿');
 				// Handle Errors here.
 				const errorCode = error.code;
 				const errorMessage = error.message;
@@ -28,4 +31,15 @@ export const login = () => {
 				rej(error);
 			});
 	});
+};
+
+export const logout = () => {
+	signOut(auth)
+		.then(() => {
+			user.set(null);
+			toast.success("You're signed out!");
+		})
+		.catch((error) => {
+			toast.error('Something went wrong. 😿');
+		});
 };

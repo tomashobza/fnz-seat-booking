@@ -6,5 +6,9 @@
 	onMount(initFirebase);
 </script>
 
+<svelte:head>
+	<title>FNZ - Seat Booking</title>
+</svelte:head>
+
 <Toaster />
 <slot />
