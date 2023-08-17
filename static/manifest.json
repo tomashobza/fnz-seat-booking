@@ -1,0 +1,17 @@
+{
+	"short_name": "FNZ Seats",
+	"name": "FNZ Seat Booking",
+	"start_url": "/",
+	"icons": [
+		{
+			"src": "logo_512.png",
+			"type": "image/png",
+			"sizes": "512x512"
+		}
+	],
+	"background_color": "#0F172A",
+	"display": "standalone",
+	"scope": "/",
+	"theme_color": "#0F172A",
+	"description": "Book you seat in the FNZ Brno office and keep track of where you're sitting."
+}
