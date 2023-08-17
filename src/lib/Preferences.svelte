@@ -3,7 +3,16 @@
 	import Day from './Day.svelte';
 	import { doc, getDoc, setDoc } from 'firebase/firestore';
 	import { db } from './firebase';
-	import { preference, user } from './stores';
+	import {
+		friday,
+		// loadedPreference,
+		monday,
+		// preference,
+		thursday,
+		tuesday,
+		user,
+		wednesday
+	} from './stores';
 	import { Button } from '@svelteuidev/core';
 	import { save_preferences } from '$lib';
 	import toast from 'svelte-french-toast';
@@ -33,17 +42,19 @@
 		const docSnap = await getDoc(docRef);
 
 		if (docSnap.exists()) {
-			console.log('Document data:', docSnap.data());
+			// console.log('Document data:', docSnap.data());
 			const db_data: any = docSnap.data();
-			preference.set(db_data);
-			console.log(preference);
+
+			db_data?.monday && monday.set(db_data.monday);
+			db_data?.tuesday && tuesday.set(db_data.tuesday);
+			db_data?.wednesday && wednesday.set(db_data.wednesday);
+			db_data?.thursday && thursday.set(db_data.thursday);
+			db_data?.friday && friday.set(db_data.friday);
 		} else {
 			// docSnap.data() will be undefined in this case
-			console.log('No such document!');
+			// console.log('No such document!');
 		}
 	});
-
-	$: console.log($preference);
 </script>
 
 <div
