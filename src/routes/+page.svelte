@@ -15,7 +15,7 @@
 	let drawer_open = false;
 
 	const loginHandler = async () => {
-		console.log(await login());
+		await login();
 	};
 </script>
 

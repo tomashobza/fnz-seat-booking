@@ -32,5 +32,3 @@ export const preferences = derived(
 		};
 	}
 );
-
-preferences.subscribe((v) => console.log(v));
