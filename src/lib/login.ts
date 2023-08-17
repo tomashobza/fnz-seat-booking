@@ -1,7 +1,7 @@
 import { getAuth, signOut, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import toast from 'svelte-french-toast';
 import { auth, provider } from './firebase';
-import { days_stores, user } from './stores';
+import { days_stores, seats, seat_number, user, user_has_seat } from './stores';
 
 export const login = () => {
 	return new Promise((res, rej) => {
@@ -39,6 +39,9 @@ export const logout = () => {
 			user.set(null);
 			days_stores.forEach((store) => store.set([]));
 			toast.success("You're signed out!");
+			seat_number.set(null);
+			user_has_seat.set(true);
+			seats.set([]);
 		})
 		.catch((error) => {
 			toast.error('Something went wrong. 😿');

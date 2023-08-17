@@ -1,7 +1,8 @@
 import { toast } from 'svelte-french-toast';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { get } from 'svelte/store';
 import {
+	seats,
 	friday,
 	monday,
 	seat_number,
@@ -12,8 +13,7 @@ import {
 	wednesday
 } from './stores';
 import { db } from './firebase';
-
-const days_of_week = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+import { days_of_week_lc } from './constants';
 
 export const get_users_preference = async () => {
 	if (!get(user).uid) return;
@@ -39,7 +39,7 @@ export const get_users_seat = async () => {
 	const docRef = doc(db, 'seatAssignments', 'current');
 	const docSnap = await getDoc(docRef);
 	const d = new Date();
-	const day = days_of_week[d.getDay() - 1];
+	const day = days_of_week_lc[d.getDay() - 1];
 
 	console.log(docSnap.exists());
 
@@ -58,7 +58,69 @@ export const get_users_seat = async () => {
 		} else {
 			user_has_seat.set(false);
 		}
+
+		console.log(
+			Object.keys(db_data[day]).map((key) => {
+				return db_data[day][key] == null ? key : null;
+			})
+		);
+
+		seats.set(db_data[day]);
 	} else {
 		toast.error('There are no assignments yet. 😿');
 	}
+};
+
+export const grab_a_seat = async (seat_num: number | null) => {
+	if (!seat_num) return;
+
+	seats.update((v) => {
+		v[seat_num] = get(user).uid;
+		return v;
+	});
+
+	const d = new Date();
+	const day = days_of_week_lc[d.getDay() - 1];
+
+	const update = {};
+	update[day] = get(seats);
+	update[day][`${seat_num}`] = get(user).uid;
+
+	await get_users_seat();
+	if (get(seats)[`${seat_num}`] != null && get(seats)[`${seat_num}`] != get(user).uid) {
+		toast.error('Somebody was faster. 😿');
+		return;
+	}
+
+	updateDoc(doc(db, 'seatAssignments', 'current'), update)
+		.then(() => {
+			toast.success('Seat grabbed successfully!');
+			user_has_seat.set(true);
+			seat_number.set(seat_num);
+		})
+		.catch(() => toast.error('Something went wrong. 😿'));
+};
+
+export const free_a_seat = (seat_num: number | null) => {
+	if (!seat_num) return;
+
+	seats.update((v) => {
+		v[seat_num] = get(user).uid;
+		return v;
+	});
+
+	const d = new Date();
+	const day = days_of_week_lc[d.getDay() - 1];
+
+	const update = {};
+	update[day] = get(seats);
+	update[day][`${seat_num}`] = null;
+
+	updateDoc(doc(db, 'seatAssignments', 'current'), update)
+		.then(async () => {
+			toast.success('Seat freed successfully!');
+			user_has_seat.set(false);
+			seat_number.set(null);
+		})
+		.catch(() => toast.error('Something went wrong. 😿'));
 };

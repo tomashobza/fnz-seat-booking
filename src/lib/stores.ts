@@ -35,4 +35,4 @@ export const preferences = derived(
 
 export const seat_number = writable<number | null>(null);
 export const user_has_seat = writable<boolean>(true);
-export const empty_seats = writable<number[]>([]);
+export const seats = writable<number[]>([]);

@@ -3,21 +3,7 @@ const admin = require('firebase-admin');
 
 admin.initializeApp();
 
-exports.helloWorld = functions.https.onRequest((_req, res) => {
-    var db = admin.firestore();
-    return db
-        .collection('preferences')
-        .get()
-        .then((snapshot) => {
-            res.send(snapshot.docs.map((v) => v.id));
-        })
-        .catch((err) => {
-            console.error(err);
-            res.status(500).send('Error fetching preferences');
-        });
-});
-
-exports.assignSeats = functions.https.onRequest(async (req, res) => {
+exports.weeklySeatAssignmentCheck = functions.pubsub.schedule('every sunday 00:00').timeZone('America/Los_Angeles').onRun(async (context) => {
     const db = admin.firestore();
     const SEAT_COUNT = 93;
 
@@ -78,6 +64,4 @@ exports.assignSeats = functions.https.onRequest(async (req, res) => {
 
     // Save seat assignment to Firestore
     await db.collection('seatAssignments').doc('current').set(seatAssignment);
-
-    res.status(200).send(seatAssignment);
 });

@@ -6,7 +6,6 @@
 	import { get_users_seat } from '$lib/db';
 	onMount(() => {
 		initFirebase();
-		get_users_seat();
 	});
 </script>
 

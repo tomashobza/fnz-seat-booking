@@ -2,7 +2,7 @@
 	import { Checkbox, NumberInput } from '@svelteuidev/core';
 	import { days_stores } from './stores';
 	import { get } from 'svelte/store';
-	const days_of_week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+	import { days_of_week_uc } from './constants';
 
 	export let day: number = 0;
 	let checked: boolean;
@@ -34,7 +34,7 @@
 >
 	<div class="flex flex-row items-center">
 		<Checkbox class="pr-6" bind:checked />
-		<div class="flex-grow" class:line-through={!checked}>{days_of_week[day]}</div>
+		<div class="flex-grow" class:line-through={!checked}>{days_of_week_uc[day]}</div>
 	</div>
 	<div class="flex flex-row items-center w-[60%]">
 		<NumberInput

@@ -5,6 +5,7 @@ import { getFirestore } from 'firebase/firestore';
 
 import { GoogleAuthProvider, getAuth, onAuthStateChanged } from 'firebase/auth';
 import { user } from './stores';
+import { get_users_seat } from './db';
 
 export const provider = new GoogleAuthProvider();
 
@@ -32,6 +33,7 @@ export const initFirebase = () => {
 	onAuthStateChanged(auth, (current_user) => {
 		if (current_user) {
 			user.set(current_user);
+			get_users_seat();
 		} else {
 			user.set(null);
 		}
