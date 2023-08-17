@@ -23,7 +23,7 @@
 	const handleSave = () => {
 		loading = true;
 		save_preferences()
-			.then((res) => {
+			?.then((res) => {
 				// console.log(res);
 				toast.success('Preferences saved!');
 			})
@@ -33,7 +33,7 @@
 			})
 			.finally(() => {
 				loading = false;
-			});
+			}) ?? (loading = false);
 	};
 
 	onMount(async () => {
