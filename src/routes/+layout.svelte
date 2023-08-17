@@ -3,7 +3,11 @@
 	import { initFirebase } from '$lib/firebase';
 	import { Toaster } from 'svelte-french-toast';
 	import { onMount } from 'svelte';
-	onMount(initFirebase);
+	import { get_users_seat } from '$lib/db';
+	onMount(() => {
+		initFirebase();
+		get_users_seat();
+	});
 </script>
 
 <svelte:head>

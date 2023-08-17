@@ -1,7 +1,7 @@
 import { getAuth, signOut, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import toast from 'svelte-french-toast';
 import { auth, provider } from './firebase';
-import { user } from './stores';
+import { days_stores, user } from './stores';
 
 export const login = () => {
 	return new Promise((res, rej) => {
@@ -37,6 +37,7 @@ export const logout = () => {
 	signOut(auth)
 		.then(() => {
 			user.set(null);
+			days_stores.forEach((store) => store.set([]));
 			toast.success("You're signed out!");
 		})
 		.catch((error) => {

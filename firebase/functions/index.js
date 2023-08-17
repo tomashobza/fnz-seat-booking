@@ -19,6 +19,7 @@ exports.helloWorld = functions.https.onRequest((_req, res) => {
 
 exports.assignSeats = functions.https.onRequest(async (req, res) => {
     const db = admin.firestore();
+    const SEAT_COUNT = 93;
 
     let seatAssignment = {
         monday: {},
@@ -28,9 +29,16 @@ exports.assignSeats = functions.https.onRequest(async (req, res) => {
         friday: {}
     };
 
+    // Initialize all seats to null
+    for (let i = 1; i <= SEAT_COUNT; i++) {
+        for (let day in seatAssignment) {
+            seatAssignment[day][i] = null;
+        }
+    }
+
     // Helper function to get an unassigned seat
     const getRandomUnassignedSeat = (day) => {
-        for (let i = 1; i <= 100; i++) { // Assuming a maximum of 100 seats for example
+        for (let i = 1; i <= SEAT_COUNT; i++) {
             if (!seatAssignment[day][i]) {
                 return i;
             }
@@ -46,14 +54,19 @@ exports.assignSeats = functions.https.onRequest(async (req, res) => {
         const userPrefs = doc.data();
 
         for (let day in userPrefs) {
+            // If the user hasn't selected a desk for the day, skip
+            if (userPrefs[day].length === 0) continue;
+
+            let seatAssigned = false;
             for (let choice of userPrefs[day]) {
                 if (!choice) continue; // Skip null choices
-                if (!seatAssignment[day][choice]) {
+                if (seatAssignment[day][choice] === null) {
                     seatAssignment[day][choice] = userId;
-                    break; // Move to the next day once a seat is assigned
+                    seatAssigned = true;
+                    break;
                 }
             }
-            if (!seatAssignment[day].hasOwnProperty(userId)) {
+            if (!seatAssigned) {
                 // All user choices were taken, assign a random seat
                 const randomSeat = getRandomUnassignedSeat(day);
                 if (randomSeat) {

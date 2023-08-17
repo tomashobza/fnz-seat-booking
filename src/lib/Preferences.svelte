@@ -1,21 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Day from './Day.svelte';
-	import { doc, getDoc, setDoc } from 'firebase/firestore';
-	import { db } from './firebase';
-	import {
-		friday,
-		// loadedPreference,
-		monday,
-		// preference,
-		thursday,
-		tuesday,
-		user,
-		wednesday
-	} from './stores';
 	import { Button } from '@svelteuidev/core';
 	import { save_preferences } from '$lib';
 	import toast from 'svelte-french-toast';
+	import { get_users_preference } from './db';
 
 	export let open: boolean = false;
 	let loading = false;
@@ -36,25 +25,7 @@
 			}) ?? (loading = false);
 	};
 
-	onMount(async () => {
-		if (!$user.uid) return;
-		const docRef = doc(db, 'preferences', $user.uid);
-		const docSnap = await getDoc(docRef);
-
-		if (docSnap.exists()) {
-			// console.log('Document data:', docSnap.data());
-			const db_data: any = docSnap.data();
-
-			db_data?.monday && monday.set(db_data.monday);
-			db_data?.tuesday && tuesday.set(db_data.tuesday);
-			db_data?.wednesday && wednesday.set(db_data.wednesday);
-			db_data?.thursday && thursday.set(db_data.thursday);
-			db_data?.friday && friday.set(db_data.friday);
-		} else {
-			// docSnap.data() will be undefined in this case
-			// console.log('No such document!');
-		}
-	});
+	onMount(get_users_preference);
 </script>
 
 <div
