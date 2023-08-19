@@ -32,6 +32,17 @@
 	style="height: {open ? 60 : 0}%"
 	class="transition-all duration-300 overflow-hidden flex flex-col items-center justify-around gap-4"
 >
+	<div class="flex-grow flex flex-row items-center justify-between w-full max-w-[30rem] gap-2">
+		<div class="flex flex-row items-center">
+			<!-- <Checkbox class="pr-6" bind:checked />
+		<div class="flex-grow" class:line-through={!checked}>{days_of_week_uc[day]}</div> -->
+		</div>
+		<div class="flex flex-row items-center w-[60%]">
+			<div>lol</div>
+			<div>lol</div>
+			<div>lol</div>
+		</div>
+	</div>
 	{#each [0, 1, 2, 3, 4] as day}
 		<Day {day} />
 	{/each}
