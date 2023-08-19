@@ -10,7 +10,8 @@ import {
 	tuesday,
 	user,
 	user_has_seat,
-	wednesday
+	wednesday,
+	week_seats
 } from './stores';
 import { db } from './firebase';
 import { days_of_week_lc } from './constants';
@@ -44,9 +45,24 @@ export const get_users_seat = async () => {
 	console.log(docSnap.exists());
 
 	if (docSnap.exists()) {
-		console.log('Document data:', docSnap.data());
+		// console.log('Document data:', docSnap.data());
 		const db_data = docSnap.data();
+
+		week_seats.set(
+			Object.keys(db_data).map((key) => {
+				let st = null;
+				Object.keys(db_data[key]).forEach((seat) => {
+					if (db_data[key][seat] == get(user).uid) {
+						st = seat;
+					}
+				});
+				return st;
+			})
+		);
+
+		if (!db_data[day]) return;
 		let seat: null | number = null;
+
 		Object.keys(db_data[day]).forEach((key) => {
 			if (db_data[day][key] == get(user).uid) {
 				seat = parseInt(key);
@@ -59,11 +75,11 @@ export const get_users_seat = async () => {
 			user_has_seat.set(false);
 		}
 
-		console.log(
-			Object.keys(db_data[day]).map((key) => {
-				return db_data[day][key] == null ? key : null;
-			})
-		);
+		// console.log(
+		// 	Object.keys(db_data[day]).map((key) => {
+		// 		return db_data[day][key] == null ? key : null;
+		// 	})
+		// );
 
 		seats.set(db_data[day]);
 	} else {

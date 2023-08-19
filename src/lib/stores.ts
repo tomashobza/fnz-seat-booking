@@ -36,3 +36,5 @@ export const preferences = derived(
 export const seat_number = writable<number | null>(null);
 export const user_has_seat = writable<boolean>(true);
 export const seats = writable<number[]>([]);
+
+export const week_seats = writable<(null | number)[]>([]);

@@ -2,10 +2,11 @@
 	import ArrowUp from '$lib/ArrowUp.svelte';
 	import FreeSeats from '$lib/FreeSeats.svelte';
 	import Preferences from '$lib/Preferences.svelte';
+	import { days_of_week_lc, days_of_week_uc } from '$lib/constants';
 	import { free_a_seat } from '$lib/db';
 	import { auth } from '$lib/firebase';
 	import { login, logout } from '$lib/login';
-	import { seat_number, user, user_has_seat } from '$lib/stores';
+	import { seat_number, user, user_has_seat, week_seats } from '$lib/stores';
 	import { SvelteUIProvider } from '@svelteuidev/core';
 	import { Button } from '@svelteuidev/core';
 	import { get } from 'svelte/store';
@@ -13,7 +14,8 @@
 	const weekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 	const d = new Date();
-	const day = weekday[d.getDay()];
+	const d_num = d.getDay();
+	const day = weekday[d_num];
 
 	let drawer_open = false;
 
@@ -38,17 +40,40 @@
 					class="text-2xl md:text-4xl font-light leading-[3rem] flex flex-col items-center gap-2"
 				>
 					<div class="text-center">Your seat for {day}:</div>
-					<div
-						class="bg-blue-500 font-bold bg-opacity-30 rounded-lg px-3 py-2 text-3xl md:text-5xl mb-10"
-					>
-						{$seat_number ?? '--    '}
+					{#if d_num < 6}
+						<div
+							class="bg-blue-500 font-bold bg-opacity-30 rounded-lg px-3 py-2 text-3xl md:text-5xl mb-10"
+						>
+							{$seat_number ?? '--'}
+						</div>
+
+						<Button
+							class="self-center flex flex-row items-center gap-2 text-sm"
+							on:click={() => free_a_seat(get(seat_number))}
+						>
+							Give it away.
+						</Button>
+					{:else}
+						<div
+							class="bg-blue-500 font-bold bg-opacity-30 rounded-lg px-3 py-2 text-3xl md:text-5xl mb-2"
+						>
+							{'🍻'}
+						</div>
+						<div class="text-sm opacity-50">Go grab a beer!</div>
+					{/if}
+					<div class="text-sm mt-5 mb-2">Your seats:</div>
+					<div class="flex flex-row items-center justify-center gap-6 flex-wrap">
+						{#each Array(5) as _, i}
+							{#if $week_seats[i]}
+								<div
+									class="border px-3 py-2 rounded-lg text-xs flex flex-col items-center gap-1 w-[5rem]"
+								>
+									<div>{days_of_week_uc[i]}</div>
+									<div class="text-base font-semibold">{$week_seats[i]}</div>
+								</div>
+							{/if}
+						{/each}
 					</div>
-					<Button
-						class="self-center flex flex-row items-center gap-2 text-sm"
-						on:click={() => free_a_seat(get(seat_number))}
-					>
-						Give it away.
-					</Button>
 				</div>
 			{:else}
 				<div class="text-center">
