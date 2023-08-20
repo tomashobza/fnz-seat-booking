@@ -62,7 +62,9 @@
 						<div class="text-sm opacity-50">Go grab a beer!</div>
 					{/if}
 					<div class="text-sm mt-5 mb-2">Your seats:</div>
-					<div class="flex flex-row items-center justify-center gap-6 flex-wrap justify-self-end">
+					<div
+						class="flex-shrink flex flex-row items-center justify-center gap-6 flex-wrap justify-self-end"
+					>
 						{#each Array(5) as _, i}
 							{#if $week_seats[i]}
 								<div
