@@ -40,7 +40,7 @@
 					class="text-2xl md:text-4xl font-light leading-[3rem] flex flex-col items-center gap-2"
 				>
 					<div class="text-center">Your seat for {day}:</div>
-					{#if d_num < 6}
+					{#if d_num < 6 || d_num > 0}
 						<div
 							class="bg-blue-500 font-bold bg-opacity-30 rounded-lg px-3 py-2 text-3xl md:text-5xl mb-10"
 						>
@@ -62,7 +62,7 @@
 						<div class="text-sm opacity-50">Go grab a beer!</div>
 					{/if}
 					<div class="text-sm mt-5 mb-2">Your seats:</div>
-					<div class="flex flex-row items-center justify-center gap-6 flex-wrap">
+					<div class="flex flex-row items-center justify-center gap-6 flex-wrap justify-self-end">
 						{#each Array(5) as _, i}
 							{#if $week_seats[i]}
 								<div
