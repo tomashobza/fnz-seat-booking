@@ -17,9 +17,11 @@ On the other hand, if the user decides not to come to the office, they can give 
 ## Demos
 
 Choosing an empty seat:
+
 <img src="demo1.gif" width="300">
 
 Setting preferrences:
+
 <img src="demo2.gif" width="300">
 
 ## Transparency
