@@ -1,38 +1,27 @@
-# create-svelte
+# FNZ Seat Booking app
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+A simple app created using SvelteKit and Firebase for booking seats in the FNZ Brno office (L5). It's nothing huge, but it aims to solve the confusion caused by the current system (Excel spreadsheet).
 
-## Creating a project
+## How does it work?
 
-If you're seeing this, you've probably already done this step. Congrats!
+Login is done throught google auth. It's the safest and fastest to implement, although I'd love to implement our company's microsoft auth.
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+A user selects their preferred seat for each day of the week. For each day, they have 3 choices going down from the most preferred. On every sunday a cloud function runs that calculated the seat assignments for the upcoming week.
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+The user can see their seat for today in the app as well as the assigned seats.
 
-## Developing
+In case the user want's to come to the office, but didn't set a preferrence before the calculation, they can take empty seats for just that day (if there are any).
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+On the other hand, if the user decides not to come to the office, they can give the seat away - again just for that day - and it will appear as empty to other users.
 
-```bash
-npm run dev
+## Demos
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+Choosing an empty seat:
+<img src="demo1.gif" width="300">
 
-## Building
+Setting preferrences:
+<img src="demo2.gif" width="300">
 
-To create a production version of your app:
+## Transparency
 
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+The app doesn't save any informations about the user. It just assigns each of them a token on login and then uses only that token. A user can only read their preferrence.
